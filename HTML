@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>لولا | عيد ميلاد سعيد - هدية من القلب</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: linear-gradient(145deg, #0a0f2a 0%, #020210 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #f5f0e6;
+            position: relative;
+        }
+
+        .stars-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: radial-gradient(ellipse at center, #0a0f2a 0%, #020210 100%);
+        }
+
+        .star {
+            position: absolute;
+            background-color: #fff;
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: twinkle 3s infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.2; transform: scale(1);}
+            100% { opacity: 1; transform: scale(1.1);}
+        }
+
+        .giant-star {
+            position: absolute;
+            background: radial-gradient(circle, #fffacd, #ffd966);
+            border-radius: 50%;
+            animation: gentlePulse 4s infinite alternate;
+        }
+
+        @keyframes gentlePulse {
+            0% { opacity: 0.5; transform: scale(1);}
+            100% { opacity: 1; transform: scale(1.1);}
+        }
+
+        .birthday-world {
+            position: relative;
+            z-index: 10;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 2rem 4rem;
+        }
+
+        .hero-section {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 80px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .hero-section h1 {
+            font-size: 3.6rem;
+            background: linear-gradient(135deg, #FFD966, #FFB6C1, #FFA07A);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero-section p {
+            font-size: 1.4rem;
+            margin-top: 0.8rem;
+            color: #FFE4B5;
+        }
+
+        .age-badge {
+            background: linear-gradient(95deg, #FF69B4, #FFB347);
+            display: inline-block;
+            padding: 0.5rem 1.8rem;
+            border-radius: 40px;
+            margin-top: 1rem;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .windows-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .magic-window {
+            background: rgba(12, 20, 35, 0.8);
+            border-radius: 2rem;
+            padding: 1.8rem 1.2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 210, 90, 0.3);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        .magic-window:hover {
+            transform: translateY(-8px);
+            border-color: #FFD966;
+            background: rgba(20, 30, 55, 0.9);
+        }
+
+        .window-icon {
+            font-size: 3rem;
+            background: linear-gradient(145deg, #FFD966, #FF69B4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .magic-window h3 {
+            font-size: 1.7rem;
+            margin-bottom: 0.5rem;
+            color: #FFDEAD;
+        }
+
+        .magic-window p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .window-hint {
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            color: #FFB347;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.94);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: 0.2s;
+        }
+
+        .modal-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .modal-content {
+            width: 90%;
+            max-width: 650px;
+            max-height: 85vh;
+            background: linear-gradient(135deg, #111a2b, #040b16);
+            border-radius: 2rem;
+            padding: 1.8rem;
+            overflow-y: auto;
+            border: 2px solid #FFB6C1;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #ffb6c1;
+            transition: 0.2s;
+        }
+
+        .close-modal:hover {
+            color: #ff69b4;
+            transform: rotate(90deg);
+        }
+
+        .footer-message {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 1rem;
+            border-top: 1px dashed #FFB6C1;
+        }
+
+        .surprise-btn {
+            background: #ff69b4;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 40px;
+            font-weight: bold;
+            margin: 20px 0;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+
+        .surprise-btn:hover {
+            background: #ff1493;
+            transform: scale(1.02);
+        }
+
+        .memory-card {
+            background: rgba(255, 220, 150, 0.12);
+            padding: 1rem;
+            border-radius: 1.2rem;
+            margin: 1rem 0;
+            text-align: right;
+            border-right: 3px solid #FFB6C1;
+            transition: 0.2s;
+        }
+
+        .memory-card:hover {
+            background: rgba(255, 220, 150, 0.22);
+            transform: translateX(-5px);
+        }
+
+        .memory-card i {
+            font-size: 1.3rem;
+            margin-left: 0.5rem;
+            color: #FFD966;
+        }
+
+        .memory-text {
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        .letter-card {
+            background: linear-gradient(135deg, rgba(255,105,180,0.15), rgba(255,185,120,0.1));
+            padding: 1.3rem;
+            border-radius: 1.5rem;
+            margin: 1.2rem 0;
+            border: 1px solid rgba(255,105,180,0.3);
+        }
+
+        .letter-number {
+            display: inline-block;
+            background: #FF69B4;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            font-weight: bold;
+            margin-left: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .letter-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #FFD966;
+            margin-bottom: 0.8rem;
+        }
+
+        .reasons-container {
+            background: rgba(255, 200, 150, 0.08);
+            border-radius: 2rem;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .reason-text {
+            font-size: 1.2rem;
+            line-height: 2;
+            color: #FFE4B5;
+        }
+
+        .big-laugh {
+            font-size: 2rem;
+            letter-spacing: 5px;
+        }
+
+        /* تنسيق روابط الأغاني */
+        .song-link-card {
+            background: linear-gradient(135deg, rgba(255,105,180,0.12), rgba(255,185,120,0.08));
+            border-radius: 1.2rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,185,120,0.2);
+            text-align: center;
+        }
+
+        .song-link-card:hover {
+            background: linear-gradient(135deg, rgba(255,105,180,0.25), rgba(255,185,120,0.15));
+            transform: translateX(-5px);
+            border-color: #FF69B4;
+        }
+
+        .song-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-decoration: none;
+            color: #FFE4B5;
+            font-size: 1.1rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .song-link i {
+            font-size: 1.8rem;
+            color: #FF69B4;
+        }
+
+        .song-link span {
+            flex: 1;
+            text-align: right;
+        }
+
+        .song-link .play-icon {
+            background: #FF69B4;
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+
+        .song-link .play-icon:hover {
+            background: #ff1493;
+            transform: scale(1.05);
+        }
+
+        .song-link .play-icon i {
+            font-size: 0.9rem;
+            color: white;
+            margin-left: 5px;
+        }
+
+        @media (max-width: 700px) {
+            .hero-section h1 { font-size: 2.3rem; }
+            .windows-grid { gap: 1rem; }
+            .reason-text { font-size: 1rem; }
+            .song-link { flex-direction: column; text-align: center; }
+            .song-link span { text-align: center; margin-bottom: 8px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="stars-bg" id="starsBg"></div>
+
+<div class="birthday-world">
+    <div class="hero-section">
+        <h1>✨ كل سنة و انتِ حبيبتي يا لولا ✨</h1>
+        <p>أنتِ فرحة عمري و أجمل هدية من الله</p>
+        <div class="age-badge"><i class="fas fa-birthday-cake"></i> عيد ميلاد سعيد يا روحي</div>
+    </div>
+
+    <div class="windows-grid">
+        <div class="magic-window" data-window="letter">
+            <div class="window-icon"><i class="fas fa-heart"></i></div>
+            <h3>رسالة مني ليكي يا روحي</h3>
+            <p>كلمات من قلبي إليكِ</p>
+            <div class="window-hint">💌 اضغطي لتقرأي رسائلي</div>
+        </div>
+        <div class="magic-window" data-window="memories">
+            <div class="window-icon"><i class="fas fa-images"></i></div>
+            <h3>ذاكرتنا الجميلة</h3>
+            <p>لحظات لا تُنسى مع حبيبتي لولا</p>
+            <div class="window-hint">📸 ذكريات عمرنا</div>
+        </div>
+        <div class="magic-window" data-window="poems">
+            <div class="window-icon"><i class="fas fa-feather-alt"></i></div>
+            <h3>قصائد حب</h3>
+            <p>شعر يخصكِ أنتِ فقط</p>
+            <div class="window-hint">📖 كلمات عذبة</div>
+        </div>
+        <div class="magic-window" data-window="reasons">
+            <div class="window-icon"><i class="fas fa-list-ol"></i></div>
+            <h3>أسباب أحبك</h3>
+            <p>طب ليه بقا؟ 🤔</p>
+            <div class="window-hint">💫 اضغطي تعرفي ليه</div>
+        </div>
+        <div class="magic-window" data-window="future">
+            <div class="window-icon"><i class="fas fa-rocket"></i></div>
+            <h3>مستقبلنا معًا</h3>
+            <p>أحلامنا و وعود العمر</p>
+            <div class="window-hint">🌙 أبدًا سويًا</div>
+        </div>
+        <div class="magic-window" data-window="playlist">
+            <div class="window-icon"><i class="fas fa-headphones"></i></div>
+            <h3>أغانينا الخاصة</h3>
+            <p>أغاني حبنا و ذكرياتنا</p>
+            <div class="window-hint">🎵 اضغطي تسمعي</div>
+        </div>
+        <div class="magic-window" data-window="surprise">
+            <div class="window-icon"><i class="fas fa-gift"></i></div>
+            <h3>مفاجأة تفاعلية</h3>
+            <p>انفجار من الألوان والفرح</p>
+            <div class="window-hint">🎁 اضغطي لترى</div>
+        </div>
+        <div class="magic-window" data-window="wishes">
+            <div class="window-icon"><i class="fas fa-crown"></i></div>
+            <h3>أمنياتي لكِ</h3>
+            <p>كل ما تتمناه قلبكِ</p>
+            <div class="window-hint">✨ تمنى أمنية</div>
+        </div>
+    </div>
+
+    <div class="footer-message">
+        <i class="fas fa-heart" style="color:#FF69B4;"></i> من قلب يحبكِ .. كل عام و أنتِ نبض حياتي يا لولا
+    </div>
+</div>
+
+<div id="globalModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="close-modal" id="closeModalBtn">&times;</div>
+        <div id="modalBodyContent"></div>
+    </div>
+</div>
+
+<script>
+    // توليد نجوم خفيفة
+    function generateStars() {
+        const container = document.getElementById('starsBg');
+        for(let i = 0; i < 400; i++) {
+            const star = document.createElement('div');
+            star.classList.add('star');
+            const size = Math.random() * 2 + 1;
+            star.style.width = size + 'px';
+            star.style.height = size + 'px';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 5 + 's';
+            star.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
+            container.appendChild(star);
+        }
+        for(let i = 0; i < 150; i++) {
+            const star = document.createElement('div');
+            star.classList.add('giant-star');
+            const size = Math.random() * 3 + 2;
+            star.style.width = size + 'px';
+            star.style.height = size + 'px';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            container.appendChild(star);
+        }
+    }
+    generateStars();
+
+    const modal = document.getElementById('globalModal');
+    const modalBody = document.getElementById('modalBodyContent');
+    const closeBtn = document.getElementById('closeModalBtn');
+
+    function closeModal() {
+        modal.classList.remove('active');
+    }
+
+    function openModal(content) {
+        modalBody.innerHTML = content;
+        modal.classList.add('active');
+        canvasConfetti({ particleCount: 50, spread: 55, origin: { y: 0.7 }, colors: ['#ffd966', '#ffb6c1'] });
+    }
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if(e.target === modal) closeModal();
+    });
+
+    // محتوى أغانينا الخاصة مع الروابط
+    function getPlaylistContent() {
+        return `
+            <div style="text-align:center;">
+                <i class="fas fa-music" style="font-size:3rem; color:#FF69B4; margin-bottom:0.5rem;"></i>
+                <h2 style="color:#FFD966;">🎵 أغانينا الخاصة يا لولا 🎵</h2>
+                <p style="margin-bottom:1.5rem; color:#FFE4B5;">أغاني حبنا و ذكرياتنا الجميلة</p>
+
+                <div class="song-link-card">
+                    <a href="https://www.albumaty.com/song/30949.html" target="_blank" class="song-link">
+                        <i class="fas fa-headphones"></i>
+                        <span>🎤 الأغنية الأولى - بحبك يا لولا</span>
+                        <span class="play-icon"><i class="fas fa-play"></i> استمعي</span>
+                    </a>
+                </div>
+
+                <div class="song-link-card">
+                    <a href="https://www.albumaty.com/song/32826.html" target="_blank" class="song-link">
+                        <i class="fas fa-heart"></i>
+                        <span>🎤 الأغنية الثانية - ذكرياتنا الحلوة</span>
+                        <span class="play-icon"><i class="fas fa-play"></i> استمعي</span>
+                    </a>
+                </div>
+
+                <div class="song-link-card">
+                    <a href="https://www.albumaty.com/song/33385.html" target="_blank" class="song-link">
+                        <i class="fas fa-star"></i>
+                        <span>🎤 الأغنية الثالثة - قمر عيد ميلادك</span>
+                        <span class="play-icon"><i class="fas fa-play"></i> استمعي</span>
+                    </a>
+                </div>
+
+                <div class="song-link-card">
+                    <a href="https://www.albumaty.com/song/2050.html" target="_blank" class="song-link">
+                        <i class="fas fa-gem"></i>
+                        <span>🎤 الأغنية الرابعة - أغنية حبنا الأبدي</span>
+                        <span class="play-icon"><i class="fas fa-play"></i> استمعي</span>
+                    </a>
+                </div>
+
+                <div class="memory-card" style="margin-top:1.5rem;">
+                    <i class="fas fa-heartbeat"></i>
+                    <div class="memory-text">
+                        كل أغنية من دول ليها قصة في قلبي.. و كل مرة اسمعهم بتذكركِ يا روحي 🤍
+                    </div>
+                </div>
+
+                <button class="surprise-btn" id="playlistHeartBtn"><i class="fas fa-heart"></i> بحبك يا لولا 💖</button>
+            </div>
+        `;
+    }
+
+    function getReasonsContent() {
+        return `
+            <div style="text-align:center;">
+                <i class="fas fa-heart" style="font-size:3rem; color:#FF69B4; margin-bottom:0.5rem;"></i>
+                <h2 style="color:#FFD966;">❤️ أسباب تخليني أحبك يا لولا ❤️</h2>
+                
+                <div class="reasons-container">
+                    <div class="reason-text">
+                        طبعاً انتي من قبل ما تفتحي الفولدر ده و انتي اكيد عارفه السبب<br>
+                        <span class="big-laugh">😂🤣😹🤣😂</span>
+                    </div>
+                </div>
+
+                <div class="reasons-container">
+                    <div class="reason-text">
+                        بس لا .. مش بس كدا<br><br>
+                        انا بحبك علشان:<br>
+                        ✨ فرفشتك ✨<br>
+                        🥺 و احيانا نكدا 🥺<br>
+                        🧠 و ذكائك 🧠<br>
+                        💕 و احيانا عبطك 💕<br>
+                        ⚡ و شوية نشاطك ⚡<br>
+                        🛌 و كثيرررر كسلك 🛌<br>
+                    </div>
+                </div>
+
+                <div class="reasons-container" style="background: linear-gradient(135deg, rgba(255,105,180,0.2), rgba(255,185,120,0.15));">
+                    <div class="reason-text" style="font-size:1.3rem;">
+                        يعني باختصار:<br>
+                        <strong style="color:#FF69B4; font-size:1.5rem;">حبيتك لانك مختلفة يا لولا</strong><br>
+                        ❤️❤️❤️<br>
+                        انتي جميله في كل الاحوال<br>
+                        💖💖💖
+                    </div>
+                </div>
+
+                <button class="surprise-btn" id="reasonsHeartBtn"><i class="fas fa-heart"></i> بحبك يا لولا ❤️</button>
+            </div>
+        `;
+    }
+
+    function getLetterContent() {
+        return `
+            <div style="text-align:center;">
+                <i class="fas fa-heart" style="font-size:3rem; color:#FF69B4; margin-bottom:0.5rem;"></i>
+                <h2 style="color:#FFD966;">رسالة مني ليكي يا روحي</h2>
+                <p style="margin-bottom:1rem; font-size:0.9rem;">٣ رسائل من قلبي لقلبكِ</p>
+
+                <div class="letter-card">
+                    <div>
+                        <span class="letter-number">١</span>
+                        <span class="letter-title">أول رسالة</span>
+                    </div>
+                    <div class="memory-text">
+                        انا يمكن مش بعرف اتكلم او اعبر اوي بس انتي اكيد عارفه اني بحبك و عارفه اني ممكن اكون غلطان في حقك كتير 
+                        و بشتمك كتير و بهينك احيانا كتير برضو بصراحه بس انتي عارفه ان ده حب والله لاني بحبط 💔
+                    </div>
+                </div>
+
+                <div class="letter-card">
+                    <div>
+                        <span class="letter-number">٢</span>
+                        <span class="letter-title">تاني رسالة</span>
+                    </div>
+                    <div class="memory-text">
+                        اليوم ال حكيتي ليا فيه انك دخلتي البلكونه و زعلتي و عيطتي لان كان نفسك ديما يبقى عندك ضهر كبير 
+                        في اليوم ده انا وعدت نفسي اني ابقي حبيبك و اخوكي و ضهرك و سندك لاني عارف انك وقتها مكنتيش عاوزه اخ كبير بالمعني الحرفي 
+                        انتي كنتي عاوزه بس ضهر يحميكي و يبقي واقف جمبك و معاكي في كل الظروف شخص تحكيله كل مشاكلك من غير ما يحكم عليكي 
+                        و بعد ما يسمع منك ينصحك بكل حب مش علشان يدعي المثالية بل علشان عاوزك تبقي احسن حد 
+                        علشان كدا انا جمبك يا روحي و هفضل ديما جمبك إن شاء الله 🤍
+                    </div>
+                </div>
+
+                <div class="letter-card">
+                    <div>
+                        <span class="letter-number">٣</span>
+                        <span class="letter-title">تالت رسالة</span>
+                    </div>
+                    <div class="memory-text" style="font-size:1.2rem; text-align:center;">
+                        💖💖💖<br>
+                        الرسالة الثالثة من قلبي:<br>
+                        <strong style="color:#FF69B4; font-size:1.3rem;">أنا بحبك يا لولا</strong><br>
+                        من كل قلبي .. بكل ما فيا .. بحبك ❤️<br>
+                        💖💖💖
+                    </div>
+                </div>
+
+                <button class="surprise-btn" id="letterHeartBtn"><i class="fas fa-heart"></i> بحبك يا لولا</button>
+            </div>
+        `;
+    }
+
+    function getMemoriesContent() {
+        return `
+            <div style="text-align:center;">
+                <h2><i class="fas fa-heart"></i> ذكرياتنا الجميلة يا لولا</h2>
+                <p style="margin-bottom:1rem; color:#FFD966;">كل ذكرى في قلبي محفورة .. لن أنساها أبدًا</p>
+                
+                <div class="memory-card">
+                    <i class="fas fa-smile-wink"></i>
+                    <div class="memory-text">
+                        <strong>📝 أولاً:</strong><br>
+                        فاكره يا حبيبتي لما كنت اول مره قولتلك انتي مرتبطه يا لولا لما كنا بنتكلم و قولتلك مش بتفكري قولتيلي لا 😂
+                    </div>
+                </div>
+
+                <div class="memory-card">
+                    <i class="fas fa-graduation-cap"></i>
+                    <div class="memory-text">
+                        <strong>📝 ثانياً:</strong><br>
+                        فاكره يا حبيبتي الكان ال كان عليها اسمك ال اشترتها و انا في الامتحان بتاع اخر ماده 💍
+                    </div>
+                </div>
+
+                <div class="memory-card">
+                    <i class="fas fa-star"></i>
+                    <div class="memory-text">
+                        <strong>📝 ثالثاً:</strong><br>
+                        فاكره يا روحي لما كنت بقيم الاوت فيت بتاعك في الاستوري بتاعي 😂❤️
+                    </div>
+                </div>
+
+                <div class="memory-card">
+                    <i class="fas fa-moon"></i>
+                    <div class="memory-text">
+                        <strong>📝 رابعاً:</strong><br>
+                        فاكره اول مره قولتلك فيها يا صغنونتي 🌙💖
+                    </div>
+                </div>
+
+                <div class="memory-card" style="border-right-color:#FF69B4; background:rgba(255,105,180,0.1);">
+                    <i class="fas fa-heartbeat"></i>
+                    <div class="memory-text">
+                        💫 فاكره يا روحي كل ذكر لينا سوا زي ما انا فاكرها بتفاصيلها و مش هنساها و هتفضل ديما ذكريتنا في قلبي مش هتتشال 💖💖💖💖
+                    </div>
+                </div>
+
+                <button class="surprise-btn" id="memoryHeartBtn"><i class="fas fa-heart"></i> بحبك يا لولا</button>
+            </div>
+        `;
+    }
+
+    function getContent(type) {
+        switch(type) {
+            case 'letter':
+                return getLetterContent();
+            case 'memories':
+                return getMemoriesContent();
+            case 'reasons':
+                return getReasonsContent();
+            case 'playlist':
+                return getPlaylistContent();
+            case 'poems':
+                return `
+                    <div style="text-align:center;">
+                        <i class="fas fa-feather-alt" style="font-size:2.5rem;"></i>
+                        <h2>قصيدة عيد ميلادكِ يا لولا</h2>
+                        <div style="background:#2a1e3c; padding:1.5rem; border-radius:2rem; margin:1rem 0;">
+                            لولا .. يا زهرة الأيام<br>
+                            في عيد ميلادكِ تسعد الأقلام<br>
+                            عيناكِ بحر من سحر و غرام<br>
+                            و قلبكِ نبع للحب الحنون<br>
+                            كل عام و أنتِ القمر في عيوني
+                        </div>
+                        <button class="surprise-btn" id="poemBtn">🌸 زهور للحبيبة لولا</button>
+                    </div>
+                `;
+            case 'future':
+                return `
+                    <div style="text-align:center;">
+                        <i class="fas fa-moon" style="font-size:2rem;"></i>
+                        <h2>مستقبلنا معاً يا لولا</h2>
+                        <p>سأحقق معكِ كل الحكايات الجميلة، أسافر حول العالم بين عينيكِ، نبني منزلًا مليئًا بالضحكات.</p>
+                        <button class="surprise-btn" id="futureBtn">✨ تمنى معي يا روحي ✨</button>
+                    </div>
+                `;
+            case 'surprise':
+                return `
+                    <div style="text-align:center;">
+                        <i class="fas fa-gift" style="font-size:4rem; color:#FFD700;"></i>
+                        <h2>🎁 مفاجأة عيد الميلاد يا لولا 🎁</h2>
+                        <p>لحظة سحرية من أجلكِ .. اضغطي الزر ليُزهر العالم حبًا.</p>
+                        <button class="surprise-btn" id="bigSurpriseBtn">إضغطي للانفجار السحري 💥</button>
+                        <div id="surpriseMsg" style="margin-top:15px;"></div>
+                    </div>
+                `;
+            case 'wishes':
+                return `
+                    <div>
+                        <h2><i class="fas fa-star-of-life"></i> أمنياتي لكِ يا لولا</h2>
+                        <ul style="background:#030b17; padding:1.5rem; border-radius:2rem; list-style:none;">
+                            <li>🌟 حياة مليئة بالسعادة والنجاح</li>
+                            <li>🌟 كل أحلامكِ تتحقق</li>
+                            <li>🌟 الصحة والحب الدائم</li>
+                            <li>🌟 أتمنى أن أكون دائمًا سبب ابتسامتكِ</li>
+                        </ul>
+                        <button class="surprise-btn" id="wishBtn">حقق أمنية يا قلبي</button>
+                    </div>
+                `;
+            default:
+                return '<p>قلبي ينبض لأجلكِ يا لولا</p>';
+        }
+    }
+
+    function attachEvents(type) {
+        const playlistHeartBtn = document.getElementById('playlistHeartBtn');
+        if(playlistHeartBtn) playlistHeartBtn.onclick = () => canvasConfetti({ particleCount: 350, spread: 110, colors: ['#ff69b4', '#ffb6c1', '#ffd700'] });
+
+        const reasonsHeartBtn = document.getElementById('reasonsHeartBtn');
+        if(reasonsHeartBtn) reasonsHeartBtn.onclick = () => canvasConfetti({ particleCount: 350, spread: 110, colors: ['#ff69b4', '#ffb6c1', '#ffd700', '#ffa07a'] });
+
+        const letterHeartBtn = document.getElementById('letterHeartBtn');
+        if(letterHeartBtn) letterHeartBtn.onclick = () => canvasConfetti({ particleCount: 300, spread: 100, colors: ['#ff69b4', '#ffb6c1', '#ffd700'] });
+
+        const memoryHeartBtn = document.getElementById('memoryHeartBtn');
+        if(memoryHeartBtn) memoryHeartBtn.onclick = () => canvasConfetti({ particleCount: 300, spread: 100, colors: ['#ff69b4', '#ffb6c1', '#ffd700'] });
+
+        const poemBtn = document.getElementById('poemBtn');
+        if(poemBtn) poemBtn.onclick = () => canvasConfetti({ particleCount: 180, spread: 80, colors: ['#ffd966', '#ff69b4'] });
+
+        const futureBtn = document.getElementById('futureBtn');
+        if(futureBtn) futureBtn.onclick = () => { canvasConfetti({ particleCount: 250, spread: 90 }); alert('أتمنى أن نكون معًا لكل لحظة جميلة يا لولا 💕'); };
+
+        const bigBtn = document.getElementById('bigSurpriseBtn');
+        if(bigBtn) {
+            bigBtn.onclick = () => {
+                canvasConfetti({ particleCount: 500, spread: 130, origin: { y: 0.5 }, colors: ['#ffd700', '#ff69b4', '#ffb6c1', '#ffa07a'] });
+                canvasConfetti({ particleCount: 250, spread: 90, origin: { y: 0.7, x: 0.2 } });
+                canvasConfetti({ particleCount: 250, spread: 90, origin: { y: 0.7, x: 0.8 } });
+                const msgDiv = document.getElementById('surpriseMsg');
+                if(msgDiv) msgDiv.innerHTML = "<h3 style='color:#FFD966;'>🎂 كل عام و انتِ حبيبتي يا لولا 🎂❤️</h3>";
+            };
+        }
+
+        const wishBtn = document.getElementById('wishBtn');
+        if(wishBtn) wishBtn.onclick = () => { canvasConfetti({ particleCount: 200, spread: 80, colors: ['#32cd32', '#ffb6c1'] }); alert('✨ تمنيتك ستتحقق لأنكِ تستحقين كل الخير يا لولا ✨'); };
+    }
+
+    document.querySelectorAll('.magic-window').forEach(win => {
+        win.addEventListener('click', () => {
+            const type = win.getAttribute('data-window');
+            const content = getContent(type);
+            openModal(content);
+            setTimeout(() => attachEvents(type), 50);
+        });
+    });
+
+    window.addEventListener('load', () => {
+        canvasConfetti({ particleCount: 100, spread: 70, colors: ['#ffd700', '#ffb6c1', '#ff69b4'] });
+    });
+</script>
+</body>
+</html>
